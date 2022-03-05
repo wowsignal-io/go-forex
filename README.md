@@ -77,3 +77,10 @@ supported currencies.
 The computed exchange rates are for informational purposes only - they are
 unlikely to be the same as the rates actually offered, but the difference should
 be tolerable for home finance applications.
+
+## Future Work
+
+### More parsers, more currencies
+
+We're missing some medium-size currencies, such as RMB. [TODO](forex/TODO)
+contains some research notes on potential additional sources of data.
