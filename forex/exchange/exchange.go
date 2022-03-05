@@ -225,6 +225,9 @@ func Convert(exchange Graph, from, to string, t time.Time, opts ...Option) (Resu
 	//
 	// *: It's customary to use a linked list, but benchmarks in Go consistently
 	// show slices performing better.
+	if from == to {
+		return Result{Rate: 1}, nil
+	}
 
 	var o options
 	for _, opt := range opts {
@@ -234,7 +237,7 @@ func Convert(exchange Graph, from, to string, t time.Time, opts ...Option) (Resu
 	t = t.UTC().Truncate(24 * time.Hour)
 	c := exchange[from]
 	if c == nil {
-		return Result{}, ErrNotFound
+		return Result{}, fmt.Errorf("%w: no data for currency %s", ErrNotFound, from)
 	}
 
 	q := filterEdges(c.rates, t, o.tolerance)
@@ -300,7 +303,7 @@ QueueLoop:
 		}
 	}
 
-	return Result{}, ErrNotFound
+	return Result{}, fmt.Errorf("%w: %s to %s at %v (tolerance %v)", ErrNotFound, from, to, t, o.tolerance)
 }
 
 func finalize(rate float64, e edge, trace map[*currency]edge) Result {
