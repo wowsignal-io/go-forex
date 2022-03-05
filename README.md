@@ -66,7 +66,7 @@ of storage.
 
 ## Supported currencies and sources
 
-Data are sources from the following banks:
+Data are sourced from the following banks:
 
 * European Central Bank
 * Royal Bank of Australia
