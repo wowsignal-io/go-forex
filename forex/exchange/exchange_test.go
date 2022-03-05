@@ -27,8 +27,8 @@ func TestConvert(t *testing.T) {
 			comment: "direct",
 			data: []Rate{
 				{
-					Src:  "USD",
-					Dst:  "EUR",
+					From: "USD",
+					To:   "EUR",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 0.9,
 				},
@@ -42,8 +42,8 @@ func TestConvert(t *testing.T) {
 			comment: "inverse",
 			data: []Rate{
 				{
-					Src:  "USD",
-					Dst:  "EUR",
+					From: "USD",
+					To:   "EUR",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 0.9,
 				},
@@ -57,8 +57,8 @@ func TestConvert(t *testing.T) {
 			comment: "wrong day (early)",
 			data: []Rate{
 				{
-					Src:  "USD",
-					Dst:  "EUR",
+					From: "USD",
+					To:   "EUR",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 0.9,
 				},
@@ -72,8 +72,8 @@ func TestConvert(t *testing.T) {
 			comment: "wrong day (late)",
 			data: []Rate{
 				{
-					Src:  "USD",
-					Dst:  "EUR",
+					From: "USD",
+					To:   "EUR",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 0.9,
 				},
@@ -87,26 +87,26 @@ func TestConvert(t *testing.T) {
 			comment: "shortest path",
 			data: []Rate{
 				{
-					Src:  "EUR",
-					Dst:  "USD",
+					From: "EUR",
+					To:   "USD",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 1.2,
 				},
 				{
-					Src:  "EUR",
-					Dst:  "CZK",
+					From: "EUR",
+					To:   "CZK",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 25,
 				},
 				{
-					Src:  "EUR",
-					Dst:  "CHF",
+					From: "EUR",
+					To:   "CHF",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 1.1,
 				},
 				{
-					Src:  "CZK",
-					Dst:  "CHF",
+					From: "CZK",
+					To:   "CHF",
 					Day:  time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Rate: 23,
 				},
@@ -119,8 +119,8 @@ func TestConvert(t *testing.T) {
 			want: Result{
 				Rate: (1 / 1.2) * 1.1,
 				Trace: []Rate{
-					{Src: "USD", Dst: "EUR", Rate: 1 / 1.2},
-					{Src: "EUR", Dst: "CHF", Rate: 1.1},
+					{From: "USD", To: "EUR", Rate: 1 / 1.2},
+					{From: "EUR", To: "CHF", Rate: 1.1},
 				},
 			},
 		},

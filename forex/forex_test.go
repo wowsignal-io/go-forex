@@ -12,7 +12,7 @@ import (
 	"github.com/wowsignal-io/go-forex/forex/internal"
 )
 
-func ExampleLiveExchange() {
+func Example() {
 	// Get the exchange rate for January 4, 2022, between the Papuan Kina
 	// and the Indian Rupee. Of the date, only the day matters - the rest is
 	// rounded off. (Exchange rates are published daily.)
@@ -33,7 +33,7 @@ func ExampleLiveExchange() {
 	// Passing exchange.FullTrace as the last argument means rate.Trace is now
 	// populated.
 	for i, step := range rate.Trace {
-		fmt.Printf("Conversion step %d/%d: 1 %s = %f %s (source: %s)\n", i+1, len(rate.Trace), step.Src, step.Rate, step.Dst, step.Info)
+		fmt.Printf("Conversion step %d/%d: 1 %s = %f %s (source: %s)\n", i+1, len(rate.Trace), step.From, step.Rate, step.To, step.Info)
 	}
 
 	// The output shows that the exchange rate was generated from Bank of
@@ -44,6 +44,42 @@ func ExampleLiveExchange() {
 	// The rate is 21.255237
 	// Conversion step 1/2: 1 PGK = 0.395226 AUD (source: RBA (inverse))
 	// Conversion step 2/2: 1 AUD = 53.780000 INR (source: RBA)
+}
+
+// Simple example of how to convert between two currencies.
+func ExampleExchange_Convert() {
+	rate, err := LiveExchange().Convert("USD", "EUR", time.Date(2022, time.January, 4, 0, 0, 0, 0, time.UTC))
+	if err != nil {
+		// Handle error.
+	}
+	fmt.Printf("The conversion rate from USD to EUR on January 4, 2022 was %f\n", rate.Rate)
+	// Output: The conversion rate from USD to EUR on January 4, 2022 was 0.886603
+}
+
+// Shows how to properly handle ErrNotFound.
+func ExampleExchange_Convert_errNotFound() {
+	rate, err := LiveExchange().Convert("USD", "EUR", time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC))
+	if errors.Is(err, exchange.ErrNotFound) {
+		fmt.Printf("No data for a Sunday\n")
+	}
+	if err != nil {
+		fmt.Printf("Got unknown error %v\n", err)
+	}
+	fmt.Printf("The conversion rate from USD to EUR on January 2, 2022 was %f\n", rate.Rate)
+	// Output: No data for a Sunday
+}
+
+// Shows how to accept an older exchange rate, when no data is available.
+func ExampleExchange_Convert_acceptOlderRate() {
+	rate, err := LiveExchange().Convert("USD", "EUR", time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC), exchange.AcceptOlderRate(7))
+	if errors.Is(err, exchange.ErrNotFound) {
+		fmt.Printf("No data within a week of January 2, 2022\n")
+	}
+	if err != nil {
+		fmt.Printf("Got unknown error %v\n", err)
+	}
+	fmt.Printf("The conversion rate from USD to EUR in the week before January 2, 2022 was %f\n", rate.Rate)
+	// Output: The conversion rate from USD to EUR in the week before January 2, 2022 was 0.882924
 }
 
 func TestLiveExchange(t *testing.T) {
@@ -84,8 +120,8 @@ func TestConvert(t *testing.T) {
 			want: exchange.Result{
 				Rate: 20.5895,
 				Trace: []exchange.Rate{
-					{Src: "USD", Dst: "EUR", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.22},
-					{Src: "EUR", Dst: "CZK", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 25.3},
+					{From: "USD", To: "EUR", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.22},
+					{From: "EUR", To: "CZK", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 25.3},
 				},
 			},
 		},
@@ -100,9 +136,9 @@ func TestConvert(t *testing.T) {
 			want: exchange.Result{
 				Rate: 6.08,
 				Trace: []exchange.Rate{
-					{Src: "PGK", Dst: "AUD", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.397},
-					{Src: "AUD", Dst: "EUR", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.63},
-					{Src: "EUR", Dst: "CZK", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 24.35},
+					{From: "PGK", To: "AUD", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.397},
+					{From: "AUD", To: "EUR", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.63},
+					{From: "EUR", To: "CZK", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 24.35},
 				},
 			},
 		},
@@ -137,8 +173,8 @@ func TestConvert(t *testing.T) {
 			want: exchange.Result{
 				Rate: 20.5895,
 				Trace: []exchange.Rate{
-					{Src: "USD", Dst: "EUR", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.22},
-					{Src: "EUR", Dst: "CZK", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 25.3},
+					{From: "USD", To: "EUR", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.22},
+					{From: "EUR", To: "CZK", Day: time.Date(2012, time.July, 19, 0, 0, 0, 0, time.UTC), Rate: 25.3},
 				},
 			},
 		},
@@ -163,8 +199,8 @@ func TestConvert(t *testing.T) {
 			want: exchange.Result{
 				Rate: 21.33,
 				Trace: []exchange.Rate{
-					{Src: "USD", Dst: "EUR", Day: time.Date(2022, time.February, 11, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.14},
-					{Src: "EUR", Dst: "CZK", Day: time.Date(2022, time.February, 11, 0, 0, 0, 0, time.UTC), Rate: 24.36},
+					{From: "USD", To: "EUR", Day: time.Date(2022, time.February, 11, 0, 0, 0, 0, time.UTC), Rate: 1.0 / 1.14},
+					{From: "EUR", To: "CZK", Day: time.Date(2022, time.February, 11, 0, 0, 0, 0, time.UTC), Rate: 24.36},
 				},
 			},
 		},

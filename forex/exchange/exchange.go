@@ -1,9 +1,10 @@
-// Package exchange provides currency conversion based on historical data. To
-// support a wide range of currencies, multiple sources of data can be ingested,
-// typically from pages published by central banks.
+// Package exchange provides currency conversion based on historical data.
 //
-// Available rates must be passed to Compile to bake an Exchange graph. Find can
-// be used to compute an exchange rate between any two currencies based on the
+// Most applications should use package forex, which provides precompiled
+// exchange rate data and convenient caching.
+//
+// Available rates must be passed to Compile to bake an Exchange graph. Convert
+// is used to compute an exchange rate between any two currencies based on the
 // available data.
 //
 // The algorithm is a simple breadth-first search to discover the shortest path
@@ -24,18 +25,26 @@ import (
 	"time"
 )
 
-var (
-	ErrNotFound      = errors.New("no forex data")
-	ErrDuplicateRate = errors.New("duplicate forex rate")
-)
+// ErrNotFound is returned when no exchange data is available to satisfy a
+// query.
+var ErrNotFound = errors.New("no forex data")
 
+// Rate represents the conversion rate between two currencies on a given day.
 type Rate struct {
-	Src, Dst string
-	Rate     float64
-	Day      time.Time
-	Info     string
+	// The rate applies when converting from the From currency to the To
+	// currency.
+	From, To string
+	// The effective rate.
+	Rate float64
+	// Valid on this day, in UTC.
+	Day time.Time
+	// Additional information about how the rate was sourced. Usually the name
+	// of the central bank whose data was used.
+	Info string
 }
 
+// Graph is a compiled graph of currencies connected by their conversion rates.
+// Query using Convert, not directly.
 type Graph map[string]*currency
 
 type currency struct {
@@ -52,20 +61,21 @@ type edge struct {
 	inverse  bool
 }
 
+// Compile produces a graph used for currency conversion.
 func Compile(rates []Rate) (Graph, error) {
 	m := map[string]*currency{}
 	for _, rate := range rates {
 		day := rate.Day.Truncate(24 * time.Hour)
-		src, ok := m[rate.Src]
+		src, ok := m[rate.From]
 		if !ok {
-			src = &currency{symbol: rate.Src}
-			m[rate.Src] = src
+			src = &currency{symbol: rate.From}
+			m[rate.From] = src
 		}
 
-		dst, ok := m[rate.Dst]
+		dst, ok := m[rate.To]
 		if !ok {
-			dst = &currency{symbol: rate.Dst}
-			m[rate.Dst] = dst
+			dst = &currency{symbol: rate.To}
+			m[rate.To] = dst
 		}
 
 		src.rates = append(src.rates, edge{
@@ -116,11 +126,25 @@ func filterEdges(edges []edge, day time.Time, tolerance time.Duration) []edge {
 	return res
 }
 
+// Result is a computed currency conversion rate obtained from Convert.
 type Result struct {
-	Rate  float64
+	// The computed rate. If a central bank published conversion rates for the
+	// currency pair, this is that rate. For currency pairs with no published
+	// rate, this is a computed rate, obtained by converting to an intermediate
+	// currency first.
+	Rate float64
+	// The conversion trace. Trace[0] is the from currency, Trace[len(Trace)-1]
+	// is the to currency. If Rate was computed through an intermediate currency
+	// (or two), then len(Trace) will be 3 or 4.
+	//
+	// Only populated if Convert was called with the FullTrace option.
 	Trace []Rate
 }
 
+// ResultType is an option for Convert. It specifies which fields of Result
+// should be populated.
+//
+// The default value is RateOnly.
 type ResultType int16
 
 func (rt ResultType) apply(opts *options) {
@@ -139,10 +163,16 @@ func (rt ResultType) String() string {
 }
 
 const (
+	// Only populate Result.Rate.
 	RateOnly ResultType = iota
+	// Populate Result.Rate and Result.Trace.
 	FullTrace
 )
 
+// Tolerance is an option for Convert. When exchange data is not available on
+// the desired day, Tolerance specifies how many earlier days may be checked.
+//
+// The default value is 0 (exact match only).
 type Tolerance time.Duration
 
 func (t Tolerance) apply(opts *options) {
@@ -169,6 +199,12 @@ type options struct {
 	tolerance  time.Duration
 }
 
+// Convert from the from currency to the to currency using the provided exchange
+// graph. Only rates from the specified date will be used (but see Tolerance).
+//
+// Most users should use forex.Convert instead. The only reason to use this
+// function is if the application wants finer control over exchange data and
+// caching.
 func Convert(exchange Graph, from, to string, t time.Time, opts ...Option) (Result, error) {
 	// The exchange rate is a graph with possible cycles. Each edge is only
 	// valid on a specific day, and the edges in each vertex are stored in
@@ -273,7 +309,7 @@ func finalize(rate float64, e edge, trace map[*currency]edge) Result {
 
 	path := []Rate{}
 	for {
-		path = append(path, Rate{Src: e.src.symbol, Dst: e.dst.symbol, Rate: e.rate, Day: e.day, Info: e.info})
+		path = append(path, Rate{From: e.src.symbol, To: e.dst.symbol, Rate: e.rate, Day: e.day, Info: e.info})
 		prev, ok := trace[e.src]
 		if !ok {
 			break

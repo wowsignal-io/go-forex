@@ -16,8 +16,8 @@ func ValidateAll(rates []exchange.Rate, allowed map[string]bool, callback func(i
 		if valid, warnings := Validate(rate, allowed); !valid {
 			callback(i, warnings)
 		}
-		seen[rate.Src] = true
-		seen[rate.Dst] = true
+		seen[rate.From] = true
+		seen[rate.To] = true
 	}
 
 	notFound = map[string]struct{}{}
@@ -41,24 +41,24 @@ func Validate(r exchange.Rate, allowed map[string]bool) (bool, []string) {
 		warnings = append(warnings, "zero Rate value")
 	}
 
-	if r.Src == r.Dst {
+	if r.From == r.To {
 		warnings = append(warnings, "source and target currency are the same")
 	}
 
-	if r.Src == "" {
+	if r.From == "" {
 		warnings = append(warnings, "missing source currency")
 	}
 
-	if r.Dst == "" {
+	if r.To == "" {
 		warnings = append(warnings, "missing target currency in rate")
 	}
 
-	if !allowed[r.Src] {
-		warnings = append(warnings, fmt.Sprintf("source currency %q not allowed here", r.Src))
+	if !allowed[r.From] {
+		warnings = append(warnings, fmt.Sprintf("source currency %q not allowed here", r.From))
 	}
 
-	if !allowed[r.Dst] {
-		warnings = append(warnings, fmt.Sprintf("target currency %q not allowed here", r.Dst))
+	if !allowed[r.To] {
+		warnings = append(warnings, fmt.Sprintf("target currency %q not allowed here", r.To))
 	}
 
 	return len(warnings) == 0, warnings

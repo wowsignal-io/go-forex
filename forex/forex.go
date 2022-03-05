@@ -50,6 +50,10 @@ var (
 
 // LiveExchange sources exchange rates from multiple online sources, refreshing
 // about twice per day.
+//
+// Currently, this exchange is built from historical rates supplied by the
+// European Central Bank, the Royal Bank of Australia and the Bank of Canada. It
+// contains about 50 currencies.
 func LiveExchange() *Exchange {
 	defaultOnce.Do(func() {
 		defaultExchange = &Exchange{
@@ -88,6 +92,8 @@ func OfflineExchange() *Exchange {
 
 const DefaultCacheLife = 12 * time.Hour
 
+// DefaultCacheDir returns a directory path where the library will cache forex
+// data downloaded from the internet.
 func DefaultCacheDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -96,6 +102,11 @@ func DefaultCacheDir() string {
 	return filepath.Join(home, ".forex")
 }
 
+// Exchange is a collection of historical exchange rates for various currencies.
+// It maintains a local cache of live data from various remote sources.
+//
+// The best way to obtain a preconfigured Exchange is by calling LiveExchange or
+// OfflineExchange.
 type Exchange struct {
 	CacheLife time.Duration
 	CacheDir  string
@@ -153,14 +164,28 @@ func (e *Exchange) lockedRead() (exchange.Graph, error) {
 }
 
 // Convert computes the exchange rate between the from and to currencies on a
-// given day.
-func (e *Exchange) Convert(from, to string, t time.Time, opts ...exchange.Option) (exchange.Result, error) {
+// given date.
+//
+// On failure, returns an empty result and an error. A special error value is
+// exchange.ErrNotFound, which Convert returns when it has no data to satisfy
+// the query. Use errors.Is to check for ErrNotFound, as it may be wrapped.
+//
+// Currency names are three-letter and uppercase, e.g. "USD" or "EUR". See
+// currencies.txt for a full list of supported currency symbols.
+//
+// Some extra variadic options are available:
+//
+// Use exchange.FullTrace to populate Result.Trace.
+//
+// Use exchange.AcceptOlderRate to extend the search to earlier data, if no
+// rates are available on the given day.
+func (e *Exchange) Convert(from, to string, date time.Time, opts ...exchange.Option) (exchange.Result, error) {
 	g, err := e.lockedRead()
 	if err != nil {
 		return exchange.Result{}, err
 	}
 
-	return exchange.Convert(g, from, to, t, opts...)
+	return exchange.Convert(g, from, to, date, opts...)
 }
 
 // Currencies returns the available currencies as a map of strings (a set).
@@ -183,11 +208,16 @@ func (e *Exchange) Currencies() (map[string]bool, error) {
 	return res, nil
 }
 
+// Freshness is an enumeration to specify the desired freshness of exchange
+// data.
 type Freshness int16
 
 const (
+	// Use the cached data in memory, if available.
 	FromMemory Freshness = iota
+	// Reload exchange data from disk, if available.
 	FromLocalCache
+	// Rebuilt the cache from origin (most likely remote).
 	FromRemoteSource
 )
 
@@ -228,8 +258,8 @@ func (e *Exchange) maybeRefresh(t time.Time) (exchange.Graph, error) {
 	return e.graph, nil
 }
 
-// ForceRefresh will rebuild the exchange graph from the upstream source, which
-// may be online or otherwise remote to this machine.
+// ForceRefresh rebuilds the exchange data from the upstream source, which may
+// be online or otherwise remote to this machine.
 func (e *Exchange) ForceRefresh() error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
@@ -304,8 +334,8 @@ Loop:
 	return nil
 }
 
-// GetFunc knows how to load and parse exchange rates from a URL. It can be used
-// with AddSource to register a new source of exchange rates.
+// GetFunc is any function that loads and parses exchange rates from a URL. It
+// can be used with AddSource to register a new source of exchange rates.
 type GetFunc func(url string) ([]exchange.Rate, error)
 
 var pathFriendlyChars = regexp.MustCompile(`[^a-zA-Z0-9]`)

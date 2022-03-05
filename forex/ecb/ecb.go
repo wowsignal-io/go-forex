@@ -99,8 +99,8 @@ func parse(r io.Reader) ([]exchange.Rate, error) {
 			}
 
 			result = append(result, exchange.Rate{
-				Src:  "EUR",
-				Dst:  currency,
+				From: "EUR",
+				To:   currency,
 				Day:  t,
 				Rate: rate,
 				Info: "ECB",
