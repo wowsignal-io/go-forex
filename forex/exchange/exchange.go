@@ -27,7 +27,7 @@ import (
 
 // ErrNotFound is returned when no exchange data is available to satisfy a
 // query.
-var ErrNotFound = errors.New("no forex data")
+var ErrNotFound = errors.New("exchange rate not found")
 
 // Rate represents the conversion rate between two currencies on a given day.
 type Rate struct {

@@ -48,6 +48,11 @@ for i, step := range rate.Trace {
 // Conversion step 2/2: 1 AUD = 53.780000 INR (source: RBA)
 ```
 
+## Commandline interface
+
+A command called `forex-convert` is provided exposing the above API over the
+commandline.
+
 ## Offline operation
 
 All above examples use the `LiveExchange`, which downloads and caches exchange
