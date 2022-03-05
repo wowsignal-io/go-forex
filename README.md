@@ -53,6 +53,24 @@ for i, step := range rate.Trace {
 A command called `forex-convert` is provided exposing the above API over the
 commandline.
 
+```sh
+./forex-convert -from=PGK -to=INR -date=2021-03-01 -v
+# Outputs:
+# Conversion step 1/2: 1 PGK = 0.367985 AUD (source: RBA (inverse))
+# Conversion step 2/2: 1 AUD = 56.850000 INR (source: RBA)
+# Computed rate: 20.919963
+```
+
+Or, to get just the number:
+
+```sh
+./forex-convert -from=PGK -to=INR -date=2021-03-01
+# Outputs:
+# 20.919963
+```
+
+Also supports other options, such as offline operation and search tolerances. Run `forex-convert --help`.
+
 ## Offline operation
 
 All above examples use the `LiveExchange`, which downloads and caches exchange
