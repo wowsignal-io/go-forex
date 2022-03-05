@@ -133,9 +133,10 @@ type Result struct {
 	// rate, this is a computed rate, obtained by converting to an intermediate
 	// currency first.
 	Rate float64
-	// The conversion trace. Trace[0] is the from currency, Trace[len(Trace)-1]
-	// is the to currency. If Rate was computed through an intermediate currency
-	// (or two), then len(Trace) will be 3 or 4.
+	// The conversion trace. Trace[0].From is the from currency,
+	// Trace[len(Trace)-1].To is the to currency. If Rate was computed through
+	// an intermediate currency (or two), then len(Trace) will be 2 or 3, while
+	// for direct rates the length will be 1.
 	//
 	// Only populated if Convert was called with the FullTrace option.
 	Trace []Rate
