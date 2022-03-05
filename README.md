@@ -10,6 +10,8 @@ from several central banks (see the list below) and then compute the exchange
 rate.
 
 ```go
+import "github.com/wowsignal-io/go-forex/forex"
+
 rate, err := forex.LiveExchange().Convert("USD", "EUR", time.Date(2022, time.January, 4, 0, 0, 0, 0, time.UTC))
 if err != nil { /* Handle errors. */ }
 fmt.Printf("The conversion rate from USD to EUR on January 4, 2022 was %f\n", rate.Rate)
@@ -59,8 +61,8 @@ historical data is available. (However, it's easy to update the data used by the
 The algorithm is breadth-first walk through the data while filtering edges
 sorted by time. Runtime scales linearly with the number of currencies and
 logarithmically with the length of historical data. On an M1 MacBook, computing
-and indirect exchange rate takes about 3979 ns and requires about 7,000 bytes of
-storage.
+and indirect exchange rate takes about 4,000 ns and requires about 7,000 bytes
+of storage.
 
 ## Supported currencies and sources
 
