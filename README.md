@@ -3,6 +3,8 @@
 Simple and efficient Go library for getting daily foreign exchange rates.
 Built-in support for ca. 50 currencies.
 
+Also includes a simple [commandline tool](#commandline-interface).
+
 ## Examples
 
 The following example will automatically download (and cache) exchange rates
