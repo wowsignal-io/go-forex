@@ -53,8 +53,17 @@ for i, step := range rate.Trace {
 A command called `forex-convert` is provided exposing the above API over the
 commandline.
 
+To install:
+
 ```sh
-./forex-convert -from=PGK -to=INR -date=2021-03-01 -v
+go install github.com/wowsignal-io/go-forex/cmd/forex-convert@latest
+# This places forex-convert in $GOBIN.
+```
+
+Convert some currencies:
+
+```sh
+forex-convert -from=PGK -to=INR -date=2021-03-01 -v
 # Outputs:
 # Conversion step 1/2: 1 PGK = 0.367985 AUD (source: RBA (inverse))
 # Conversion step 2/2: 1 AUD = 56.850000 INR (source: RBA)
@@ -64,7 +73,7 @@ commandline.
 Or, to get just the number:
 
 ```sh
-./forex-convert -from=PGK -to=INR -date=2021-03-01
+forex-convert -from=PGK -to=INR -date=2021-03-01
 # Outputs:
 # 20.919963
 ```
