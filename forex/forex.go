@@ -122,6 +122,10 @@ func (e *Exchange) String() string {
 	for i, s := range e.sources {
 		sources[i] = s.name
 	}
+	if e.graph == nil {
+		return fmt.Sprintf("Exchange(%s, currencies not loaded)", strings.Join(sources, ", "))
+
+	}
 	return fmt.Sprintf("Exchange(%s, %d currencies)", strings.Join(sources, ", "), len(e.graph))
 }
 
