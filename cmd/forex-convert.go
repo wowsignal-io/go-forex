@@ -45,19 +45,19 @@ func flagProvided(name string) bool {
 	return found
 }
 
-func getOpts() []exchange.Option {
-	tolerance := *tolerance
+func getTolerance() int {
 	if (*date == "today" || *date == "yesterday") && !flagProvided("tolerance") {
-		tolerance = 3
+		return 3
 	}
+	return *tolerance
+}
 
+func getOpts() []exchange.Option {
 	opts := []exchange.Option{
-		exchange.AcceptOlderRate(tolerance),
+		exchange.AcceptOlderRate(getTolerance()),
 	}
 
-	if *verbose {
-		opts = append(opts, exchange.FullTrace)
-	}
+	opts = append(opts, exchange.FullTrace)
 
 	return opts
 }
@@ -115,6 +115,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Invalid date: %v", err)
 	}
+	t = t.UTC().Truncate(24 * time.Hour)
 	e := getExchange()
 
 	src, err := getCurrency(*from)
@@ -136,9 +137,17 @@ func main() {
 		log.Fatalf("Convert: %v", err)
 	}
 
+	for _, step := range rate.Trace {
+		if !step.Day.Equal(t) {
+			log.Printf("Warning: rate %s to %s is stale, dated %s (wanted %s, -tolerance=%d)",
+				step.From, step.To, step.Day.Format("2006-01-02"), t.Format("2006-01-02"), getTolerance())
+		}
+	}
+
 	if *verbose {
 		for i, step := range rate.Trace {
-			fmt.Printf("Conversion step %d/%d: 1 %s = %f %s (source: %s)\n", i+1, len(rate.Trace), step.From, step.Rate, step.To, step.Info)
+			fmt.Printf("Conversion step %d/%d: 1 %s = %f %s (source: %s on %v)\n",
+				i+1, len(rate.Trace), step.From, step.Rate, step.To, step.Info, step.Day.Format("2006-01-02"))
 		}
 		fmt.Print("Computed rate: ")
 	}
