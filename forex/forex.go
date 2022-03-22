@@ -221,7 +221,7 @@ const (
 	FromMemory Freshness = iota
 	// Reload exchange data from disk, if available.
 	FromLocalCache
-	// Rebuilt the cache from origin (most likely remote).
+	// Rebuild the cache from origin (most likely remote).
 	FromRemoteSource
 )
 
