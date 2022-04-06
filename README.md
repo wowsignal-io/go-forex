@@ -5,6 +5,8 @@ Built-in support for ca. 50 currencies.
 
 Also includes a simple [commandline tool](#commandline-interface).
 
+Also see the [design document](https://www.wowsignal.io/articles/go-forex).
+
 ## Examples
 
 The following example will automatically download (and cache) exchange rates
