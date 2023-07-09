@@ -27,7 +27,7 @@ func Get(uri string) ([]exchange.Rate, error) {
 		return nil, err
 	}
 
-	needle := []byte("\"OBSERVATIONS\"\n")
+	needle := []byte("\"OBSERVATIONS\"")
 	i := bytes.Index(raw, needle)
 	if i < 0 {
 		return nil, errors.New("invalid BOC sheet")
