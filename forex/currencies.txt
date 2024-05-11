@@ -1,4 +1,3 @@
-AED
 AUD
 BGN
 BRL
@@ -28,7 +27,6 @@ MYR
 NOK
 NZD
 PEN
-PGK
 PHP
 PLN
 ROL
