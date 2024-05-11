@@ -85,6 +85,9 @@ func OfflineExchange() *Exchange {
 		offlineExchange.AddSource("ECB (offline)",
 			"data:text/csv;base64,"+base64.StdEncoding.EncodeToString([]byte(offline.HistoricalECBRates)),
 			ecb.Get)
+		offlineExchange.AddSource("BOC (offline)",
+			"data:text/csv;base64,"+base64.StdEncoding.EncodeToString([]byte(offline.HistoricalBOCRates)),
+			boc.Get)
 	})
 
 	return offlineExchange
