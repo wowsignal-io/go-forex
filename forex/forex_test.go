@@ -62,11 +62,11 @@ func ExampleExchange_Convert_errNotFound() {
 	rate, err := LiveExchange().Convert("USD", "EUR", time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC))
 	if errors.Is(err, exchange.ErrNotFound) {
 		fmt.Printf("No data for a Sunday\n")
-	}
-	if err != nil {
+	} else if err != nil {
 		fmt.Printf("Got unknown error %v\n", err)
+	} else {
+		fmt.Printf("The conversion rate from USD to EUR on January 2, 2022 was %f\n", rate.Rate)
 	}
-	fmt.Printf("The conversion rate from USD to EUR on January 2, 2022 was %f\n", rate.Rate)
 	// Output: No data for a Sunday
 }
 
