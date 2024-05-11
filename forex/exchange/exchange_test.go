@@ -22,6 +22,8 @@ func TestConvert(t *testing.T) {
 		{
 			comment: "empty",
 			wantErr: ErrNotFound,
+			from:    "USD",
+			to:      "EUR",
 		},
 		{
 			comment: "direct",
