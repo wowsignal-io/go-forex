@@ -16,7 +16,7 @@ func Example() {
 	// Get the exchange rate for January 4, 2022, between the Papuan Kina
 	// and the Indian Rupee. Of the date, only the day matters - the rest is
 	// rounded off. (Exchange rates are published daily.)
-	rate, err := LiveExchange().Convert("PGK", "INR", time.Date(2022, time.January, 4, 0, 0, 0, 0, time.UTC), exchange.RateOnly)
+	rate, err := LiveExchange().Convert("TWD", "CZK", time.Date(2023, time.February, 10, 0, 0, 0, 0, time.UTC), exchange.RateOnly)
 	if err != nil {
 		fmt.Printf("Convert failed (%v): are you connected to the internet?", err)
 	}
@@ -28,7 +28,7 @@ func Example() {
 	// Note that repeated calls to Convert don't download exchange rate data
 	// from the internet more than once every 12 hours, even if the program exits and
 	// restarts.
-	rate, _ = LiveExchange().Convert("PGK", "INR", time.Date(2022, time.January, 4, 0, 0, 0, 0, time.UTC), exchange.FullTrace)
+	rate, _ = LiveExchange().Convert("TWD", "CZK", time.Date(2022, time.January, 4, 0, 0, 0, 0, time.UTC), exchange.FullTrace)
 
 	// Passing exchange.FullTrace as the last argument means rate.Trace is now
 	// populated.
@@ -41,9 +41,10 @@ func Example() {
 	// Rupee.
 
 	// Output:
-	// The rate is 21.255237
-	// Conversion step 1/2: 1 PGK = 0.395226 AUD (source: RBA (inverse))
-	// Conversion step 2/2: 1 AUD = 53.780000 INR (source: RBA)
+	// The rate is 0.730520
+	// Conversion step 1/3: 1 TWD = 0.046150 CAD (source: BOC)
+	// Conversion step 2/3: 1 CAD = 0.697010 EUR (source: BOC (inverse))
+	// Conversion step 3/3: 1 EUR = 24.745000 CZK (source: ECB)
 }
 
 // Simple example of how to convert between two currencies.
@@ -127,35 +128,35 @@ func TestConvert(t *testing.T) {
 		},
 		{
 			comment:  "four currencies full trace",
-			from:     "PGK",
+			from:     "TWD",
 			to:       "CZK",
-			day:      time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC),
+			day:      time.Date(2023, time.February, 10, 0, 0, 0, 0, time.UTC),
 			exchange: LiveExchange(),
 			opts:     []exchange.Option{exchange.FullTrace},
 
 			want: exchange.Result{
-				Rate: 6.08,
+				Rate: 0.73,
 				Trace: []exchange.Rate{
-					{From: "PGK", To: "AUD", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.397},
-					{From: "AUD", To: "EUR", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.63},
-					{From: "EUR", To: "CZK", Day: time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 24.35},
+					{From: "TWD", To: "CAD", Day: time.Date(2023, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.04429},
+					{From: "CAD", To: "EUR", Day: time.Date(2023, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 0.696},
+					{From: "EUR", To: "CZK", Day: time.Date(2023, time.February, 10, 0, 0, 0, 0, time.UTC), Rate: 23.69},
 				},
 			},
 		},
 		{
 			comment:  "four currencies no trace",
-			from:     "PGK",
+			from:     "TWD",
 			to:       "CZK",
 			day:      time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC),
 			exchange: LiveExchange(),
 
 			want: exchange.Result{
-				Rate: 6.08,
+				Rate: 0.73,
 			},
 		},
 		{
 			comment:  "unknown currency",
-			from:     "TWD",
+			from:     "XXX",
 			to:       "CZK",
 			day:      time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC),
 			exchange: OfflineExchange(),
