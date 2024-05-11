@@ -1,0 +1,563 @@
+
+
+<section class="border-bottom" id="section2">
+    <div class="container" id="section2Div">
+        <div class="row mb-4">
+            <div class="col-lg-7">
+                <p class="h1 font-b text-navy-custom">
+                    Exchange rates against UAE Dirham for VAT-related obligations
+                </p>
+                <div class="input-group col-lg-6 mb-4 bg-input text-navy-custom d-flex light-bg">
+                    <input type="text" onchange="GetFXRatesDates()" name="datepicker" id="datepicker" value="" class="form-control no-bg font-r fs-6 p-0 h-100 rounded-0 px-3 date ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" data-date-format="yyyy-mm-dd" aria-describedby="basic-addon2" required="">
+                    <span class="input-group-text no-bg border-0" id="basic-addon2"><i class="text-navy-custom far fa-calendar" aria-hidden="true"></i></span>
+                    <label for="news-date-from" class="form-label position-absolute px-3 font-r fs-6">Select a date</label>
+                </div>
+                <p id="dateRangeWarning" class="font-r text-navy-custom text-danger mb-4 fs-6" hidden>
+                    Data for this date is not available
+                </p>
+                
+                <p class="font-r text-navy-custom fs-6">
+                    Last updated:
+
+Thursday 09 May 2024 06:05:07 PM                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"> <div  style="text-align:center;display:block;margin-top:0px;" class="row">
+    <div style="display:none" class="cst-loader sp d-none align-middle sp-loading me-2"></div>
+</div></div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mobile-overflow">
+                    <table class="table table-striped mb-4">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="font-m fs-small text-navy-custom"></th>
+                                <th scope="col" class="font-m fs-small text-navy-custom">
+                                    Currency
+                                </th>
+                                <th scope="col" class="font-m fs-small text-navy-custom">
+                                    Rates
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">US Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">3.6725</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Argentine Peso</td>
+                                    <td class="font-r fs-small text-navy-custom">0.004163</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Australian Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">2.424733</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Bangladesh Taka</td>
+                                    <td class="font-r fs-small text-navy-custom">0.031389</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Bahrani Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">9.739571</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Brunei Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">2.711733</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Brazilian Real</td>
+                                    <td class="font-r fs-small text-navy-custom">0.709799</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Botswana Pula</td>
+                                    <td class="font-r fs-small text-navy-custom">0.26846</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Belarus Rouble</td>
+                                    <td class="font-r fs-small text-navy-custom">1.122196</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Canadian Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">2.681244</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Swiss Franc</td>
+                                    <td class="font-r fs-small text-navy-custom">4.046832</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Chilean Peso</td>
+                                    <td class="font-r fs-small text-navy-custom">0.003921</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Chinese Yuan - Offshore</td>
+                                    <td class="font-r fs-small text-navy-custom">0.508122</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Chinese Yuan</td>
+                                    <td class="font-r fs-small text-navy-custom">0.508375</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Colombian Peso</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000941</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Czech Koruna</td>
+                                    <td class="font-r fs-small text-navy-custom">0.158496</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Danish Krone</td>
+                                    <td class="font-r fs-small text-navy-custom">0.530057</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Algerian Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.027242</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Egypt Pound</td>
+                                    <td class="font-r fs-small text-navy-custom">0.077544</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Euro</td>
+                                    <td class="font-r fs-small text-navy-custom">3.953601</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">GB Pound</td>
+                                    <td class="font-r fs-small text-navy-custom">4.589478</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Hongkong Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.469839</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Hungarian Forint</td>
+                                    <td class="font-r fs-small text-navy-custom">0.010186</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Indonesia Rupiah</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000229</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Indian Rupee</td>
+                                    <td class="font-r fs-small text-navy-custom">0.044005</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Iceland Krona</td>
+                                    <td class="font-r fs-small text-navy-custom">0.026305</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Jordan Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">5.179831</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Japanese Yen</td>
+                                    <td class="font-r fs-small text-navy-custom">0.023592</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Kenya Shilling</td>
+                                    <td class="font-r fs-small text-navy-custom">0.028034</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Korean Won</td>
+                                    <td class="font-r fs-small text-navy-custom">0.002686</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Kuwaiti Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">11.940371</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Kazakhstan Tenge</td>
+                                    <td class="font-r fs-small text-navy-custom">0.008348</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Lebanon Pound</td>
+                                    <td class="font-r fs-small text-navy-custom">4.1E-05</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Sri Lanka Rupee</td>
+                                    <td class="font-r fs-small text-navy-custom">0.012293</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Moroccan Dirham</td>
+                                    <td class="font-r fs-small text-navy-custom">0.366137</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Macedonia Denar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.064171</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Mexican Peso</td>
+                                    <td class="font-r fs-small text-navy-custom">0.217025</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Malaysia Ringgit</td>
+                                    <td class="font-r fs-small text-navy-custom">0.774658</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Nigerian Naira</td>
+                                    <td class="font-r fs-small text-navy-custom">0.002568</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Norwegian Krone</td>
+                                    <td class="font-r fs-small text-navy-custom">0.337577</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">NewZealand Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">2.209288</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Omani Rial</td>
+                                    <td class="font-r fs-small text-navy-custom">9.540696</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Peru Sol</td>
+                                    <td class="font-r fs-small text-navy-custom">0.986277</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Philippine Piso</td>
+                                    <td class="font-r fs-small text-navy-custom">0.063992</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Pakistan Rupee</td>
+                                    <td class="font-r fs-small text-navy-custom">0.01318</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Polish Zloty</td>
+                                    <td class="font-r fs-small text-navy-custom">0.921743</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Qatari Riyal</td>
+                                    <td class="font-r fs-small text-navy-custom">1.007268</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Serbian Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.033751</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Russia Rouble</td>
+                                    <td class="font-r fs-small text-navy-custom">0.039606</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Saudi Riyal</td>
+                                    <td class="font-r fs-small text-navy-custom">0.979203</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Sudanese Pound</td>
+                                    <td class="font-r fs-small text-navy-custom">0.006116</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Swedish Krona</td>
+                                    <td class="font-r fs-small text-navy-custom">0.33795</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Singapore Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">2.712334</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Thai Baht</td>
+                                    <td class="font-r fs-small text-navy-custom">0.099715</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Tunisian Dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">1.17205</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Turkish Lira</td>
+                                    <td class="font-r fs-small text-navy-custom">0.113988</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Trin Tob Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.540543</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Taiwan Dollar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.1133</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Tanzania Shilling</td>
+                                    <td class="font-r fs-small text-navy-custom">0.001413</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Uganda Shilling</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000972</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Vietnam Dong</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000144</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Yemen Rial</td>
+                                    <td class="font-r fs-small text-navy-custom">0.014677</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">South Africa Rand</td>
+                                    <td class="font-r fs-small text-navy-custom">0.198863</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Zambian Kwacha</td>
+                                    <td class="font-r fs-small text-navy-custom">0.134155</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Azerbaijan manat</td>
+                                    <td class="font-r fs-small text-navy-custom">2.160294</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Bulgarian lev</td>
+                                    <td class="font-r fs-small text-navy-custom">2.021856</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Croatian kuna</td>
+                                    <td class="font-r fs-small text-navy-custom">0.521499</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Ethiopian birr</td>
+                                    <td class="font-r fs-small text-navy-custom">0.063958</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Iraqi dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.002803</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Israeli new shekel</td>
+                                    <td class="font-r fs-small text-navy-custom">0.984347</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Libyan dinar</td>
+                                    <td class="font-r fs-small text-navy-custom">0.755379</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Mauritian rupee</td>
+                                    <td class="font-r fs-small text-navy-custom">0.079526</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Romanian leu</td>
+                                    <td class="font-r fs-small text-navy-custom">0.794827</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Syrian pound</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000282</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Turkmen manat</td>
+                                    <td class="font-r fs-small text-navy-custom">1.049286</td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="font-r fs-small text-navy-custom"></td>
+                                    <td class="font-r fs-small text-navy-custom">Uzbekistani som</td>
+                                    <td class="font-r fs-small text-navy-custom">0.000289</td>
+                                    
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+        <script>
+            $(function () {
+                var date = new Date();
+                var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                var lastDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()); 
+
+                $('#datepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: firstDay,
+                    endDate: lastDay,
+                    autoclose: true,
+                  //  todayHighlight: true,
+                    language: 'en',
+                 //   rtl: true,
+                  
+                });
+            });
+        </script>
+</section>
+
+
+
+<script type="text/javascript">
+
+    function GetFXRatesDates() {
+
+        var rangeDate = document.getElementById('datepicker').value;
+        showLoader();
+            $.ajax({
+                type: 'POST',
+                url: '/umbraco/Surface/Exchange/GetExchangeRateAllCurrencyDate?dateTime=' + rangeDate,
+                dataType: 'html',
+                success: function (data,xhr,st) {
+
+                    if (st.status === 200) {
+                        hideLoader();
+                        document.getElementById('section2Div').value = "";
+                        $("#section2").html(data);
+                        document.getElementById('datepicker').value = rangeDate;
+                    }
+                },
+                error: function () {
+                    hideLoader();
+                    $('#dateRangeWarning').removeAttr('hidden');
+                }
+            });
+    }
+
+
+
+</script>
+

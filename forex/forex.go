@@ -36,6 +36,7 @@ import (
 	"time"
 
 	"github.com/wowsignal-io/go-forex/forex/boc"
+	"github.com/wowsignal-io/go-forex/forex/cbuae"
 	"github.com/wowsignal-io/go-forex/forex/ecb"
 	"github.com/wowsignal-io/go-forex/forex/exchange"
 	"github.com/wowsignal-io/go-forex/forex/internal"
@@ -63,6 +64,7 @@ func LiveExchange() *Exchange {
 		defaultExchange.AddSource("ECB", ecb.DefaultECBSource, ecb.Get)
 		defaultExchange.AddSource("RBA", rba.DefaultRBASource, rba.Get)
 		defaultExchange.AddSource("BOC", boc.DefaultBOCSource, boc.Get)
+		defaultExchange.AddSource("CBUAE", cbuae.SourceURLForDate(time.Now().AddDate(0, 0, -1)), cbuae.Get, cbuae.DownloadOption)
 	})
 
 	return defaultExchange
@@ -349,7 +351,7 @@ var pathFriendlyChars = regexp.MustCompile(`[^a-zA-Z0-9]`)
 
 // AddSource adds a new source of exchange rates. The caller must call
 // ForceReload if the Exchange has been recently used and has a local cache.
-func (e *Exchange) AddSource(name string, url string, getter GetFunc) {
+func (e *Exchange) AddSource(name string, url string, getter GetFunc, fetchOpts ...internal.FetchOption) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 
@@ -359,6 +361,7 @@ func (e *Exchange) AddSource(name string, url string, getter GetFunc) {
 		cachePath: cachePath,
 		sourceURL: url,
 		f:         getter,
+		fetchOpts: fetchOpts,
 	})
 }
 
@@ -368,6 +371,7 @@ type rateSource struct {
 	sourceURL  string
 	f          GetFunc
 	reloadTime time.Time
+	fetchOpts  []internal.FetchOption
 }
 
 func (s *rateSource) lastReload() (time.Time, error) {
@@ -417,7 +421,7 @@ func (s *rateSource) reload(now time.Time, download bool, ttl time.Duration) (ra
 				err = err2
 			}
 		}()
-		data, err := internal.Fetch(s.sourceURL)
+		data, err := internal.Fetch(s.sourceURL, s.fetchOpts...)
 		if err != nil {
 			return nil, err
 		}

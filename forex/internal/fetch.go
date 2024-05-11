@@ -11,9 +11,11 @@ import (
 	"strings"
 )
 
+type FetchOption func(*http.Request, *http.Client) *http.Request
+
 // Fetch returns the given resource data, handling URLs (including simple data
 // URLs), as well as filesystem paths.
-func Fetch(resource string) ([]byte, error) {
+func Fetch(resource string, opts ...FetchOption) ([]byte, error) {
 	u, err := url.Parse(resource)
 	if err != nil {
 		return nil, err
@@ -21,7 +23,7 @@ func Fetch(resource string) ([]byte, error) {
 
 	switch u.Scheme {
 	case "http", "https":
-		return download(resource)
+		return download(resource, opts...)
 	case "data":
 		return decode(u.Opaque)
 	case "":
@@ -31,8 +33,20 @@ func Fetch(resource string) ([]byte, error) {
 	}
 }
 
-func download(uri string) ([]byte, error) {
-	resp, err := http.Get(uri)
+func download(uri string, opts ...FetchOption) ([]byte, error) {
+	req, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	client := &http.Client{}
+
+	for _, opt := range opts {
+		if req2 := opt(req, client); req2 != nil {
+			req = req2
+		}
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
