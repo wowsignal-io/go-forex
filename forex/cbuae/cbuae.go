@@ -134,8 +134,8 @@ func parse(raw []byte) ([]exchange.Rate, error) {
 		rate = &exchange.Rate{
 			Info: "CBUAE",
 			Day:  date,
-			From: "AED",
-			To:   iso,
+			To:   "AED",
+			From: iso,
 		}
 		return nil
 	}
