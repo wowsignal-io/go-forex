@@ -104,10 +104,11 @@ of storage.
 
 Data are sourced from the following banks:
 
-* European Central Bank
-* Royal Bank of Australia
-* Bank of Canada
-* Central Bank of the U.A.E.
+* European Central Bank (ECB)
+* Royal Bank of Australia (RBA)
+* Bank of Canada (BOC)
+* Central Bank of the U.A.E. (CBUAE)
+* The Czech National Bank (CNB)
 
 Data are refreshed every 12 hours (or manually) and cached locally in /tmp or
 similar path. See [currencies.txt](forex/currencies.txt) for a full list of

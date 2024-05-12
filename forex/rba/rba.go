@@ -26,22 +26,9 @@ const currenciesLine = 5
 // The first line where exchange rate data are
 const firstDataLine = 11
 
-func skipLines(cr *csv.Reader, n int) error {
-	for i := 0; i < n; i++ {
-		_, err := cr.Read()
-		if err == io.EOF {
-			err = io.ErrUnexpectedEOF
-		}
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func parseHeader(cr *csv.Reader) (map[int]string, error) {
 
-	err := skipLines(cr, currenciesLine)
+	err := internal.SkipLinesCSV(cr, currenciesLine)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +60,7 @@ func parse(r io.Reader) ([]exchange.Rate, error) {
 		return nil, err
 	}
 
-	skipLines(cr, firstDataLine-currenciesLine)
+	internal.SkipLinesCSV(cr, firstDataLine-currenciesLine)
 	result := []exchange.Rate{}
 	for {
 		record, err := cr.Read()
