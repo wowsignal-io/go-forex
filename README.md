@@ -1,7 +1,7 @@
 # go-forex
 
 Simple and efficient Go library for getting daily foreign exchange rates.
-Built-in support for ca. 50 currencies.
+Built-in support for ca. 80 currencies.
 
 Also includes a simple [commandline tool](#commandline-interface).
 
@@ -107,6 +107,7 @@ Data are sourced from the following banks:
 * European Central Bank
 * Royal Bank of Australia
 * Bank of Canada
+* Central Bank of the U.A.E.
 
 Data are refreshed every 12 hours (or manually) and cached locally in /tmp or
 similar path. See [currencies.txt](forex/currencies.txt) for a full list of
@@ -115,10 +116,3 @@ supported currencies.
 The computed exchange rates are for informational purposes only - they are
 unlikely to be the same as the rates actually offered, but the difference should
 be tolerable for home finance applications.
-
-## Future Work
-
-### More parsers, more currencies
-
-We're missing some medium-size currencies, such as RMB. [TODO](forex/TODO)
-contains some research notes on potential additional sources of data.
