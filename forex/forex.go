@@ -27,6 +27,7 @@ package forex
 import (
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -319,6 +320,7 @@ Loop:
 			}
 			rates = append(rates, r...)
 		case err2 := <-errCh:
+			log.Printf("ERROR: refreshing exchange rate source: %v", err)
 			if err == nil {
 				err = err2
 			}
@@ -327,7 +329,8 @@ Loop:
 
 	// An error could have come from one of the load routines.
 	if err != nil {
-		return err
+		log.Printf("ERROR: one or more exchange rate sources failed to load. First error: %v", err)
+		err = nil
 	}
 
 	g, err := exchange.Compile(rates)
