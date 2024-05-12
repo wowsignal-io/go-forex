@@ -230,7 +230,7 @@ const (
 	FromRemoteSource
 )
 
-func (e *Exchange) maybeRefresh(t time.Time) (exchange.Graph, error) {
+func (e *Exchange) maybeRefresh(now time.Time) (exchange.Graph, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 
@@ -254,7 +254,7 @@ func (e *Exchange) maybeRefresh(t time.Time) (exchange.Graph, error) {
 	// Reload from source if the oldest cache is stale. (If we don't have
 	// on-disk cache, then lastDownload will be set to year 0, which will count
 	// as stale.)
-	if e.lastDownload.Before(time.Now().Add(-e.CacheLife)) {
+	if e.lastDownload.Before(now.Add(-e.CacheLife)) {
 		lvl = FromRemoteSource
 	}
 
@@ -297,7 +297,7 @@ func (e *Exchange) forceRefresh(lvl Freshness) error {
 		go func() {
 			defer wg.Done()
 
-			r, err := s.reload(now, lvl == FromRemoteSource, e.CacheLife)
+			r, err := s.reload(lvl == FromRemoteSource)
 			if err != nil {
 				errCh <- err
 			}
@@ -391,7 +391,7 @@ func (s *rateSource) lastReload() (time.Time, error) {
 	return s.reloadTime, nil
 }
 
-func (s *rateSource) reload(now time.Time, download bool, ttl time.Duration) (rates []exchange.Rate, err error) {
+func (s *rateSource) reload(download bool) (rates []exchange.Rate, err error) {
 	if download {
 		// Ignore the error here - whether or not this worked, the thing that
 		// matters is the os.Create call.
