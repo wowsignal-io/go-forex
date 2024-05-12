@@ -64,7 +64,7 @@ func LiveExchange() *Exchange {
 		defaultExchange.AddSource("ECB", ecb.DefaultECBSource, ecb.Get)
 		defaultExchange.AddSource("RBA", rba.DefaultRBASource, rba.Get)
 		defaultExchange.AddSource("BOC", boc.DefaultBOCSource, boc.Get)
-		defaultExchange.AddSource("CBUAE", cbuae.SourceURLForDate(time.Now().AddDate(0, 0, -1)), cbuae.Get, cbuae.DownloadOption)
+		defaultExchange.AddSource("CBUAE", cbuae.SourceURLForDate(time.Now()), cbuae.Get, cbuae.DownloadOption)
 	})
 
 	return defaultExchange

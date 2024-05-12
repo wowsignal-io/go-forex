@@ -61,6 +61,12 @@ func nameToISOMap() map[string]string {
 }
 
 func SourceURLForDate(date time.Time) string {
+	switch date.Weekday() {
+	case time.Saturday:
+		date = date.AddDate(0, 0, -1)
+	case time.Sunday:
+		date = date.AddDate(0, 0, -2)
+	}
 	return fmt.Sprintf("https://www.centralbank.ae/umbraco/Surface/Exchange/GetExchangeRateAllCurrencyDate?dateTime=%s", date.Format("2006-01-02"))
 }
 
