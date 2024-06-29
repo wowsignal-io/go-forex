@@ -9,8 +9,10 @@ package cbuae
 
 import (
 	"bytes"
+	"compress/gzip"
 	_ "embed"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -84,12 +86,12 @@ func parseDate(raw []byte) (time.Time, error) {
 	const endNeedle = "</p>"
 	idx := bytes.Index(raw, []byte(needle))
 	if idx < 0 {
-		return time.Time{}, fmt.Errorf("date not found")
+		return time.Time{}, fmt.Errorf("date not found (start)")
 	}
 	raw = raw[idx+len(needle):]
 	idx = bytes.Index(raw, []byte(endNeedle))
 	if idx < 0 {
-		return time.Time{}, fmt.Errorf("date not found")
+		return time.Time{}, fmt.Errorf("date not found (end)")
 	}
 	raw = raw[:idx]
 	raw = bytes.TrimSpace(raw)
@@ -100,9 +102,28 @@ func parseDate(raw []byte) (time.Time, error) {
 	return time.ParseInLocation("Monday 02 January 2006 03:04:05 PM", string(raw), loc)
 }
 
+func gunzip(raw []byte) ([]byte, error) {
+	if len(raw) < 2 {
+		return nil, fmt.Errorf("invalid gzip header")
+	}
+
+	if raw[0] != 0x1f || raw[1] != 0x8b {
+		return raw, nil
+	}
+
+	r, err := gzip.NewReader(bytes.NewReader(raw))
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+	return io.ReadAll(r)
+}
+
 func parse(raw []byte) ([]exchange.Rate, error) {
-	const needleStartCell = `<td class="font-r fs-small text-navy-custom">`
-	const needleEndCell = `</td>`
+	raw, err := gunzip(raw)
+	if err != nil {
+		return nil, err
+	}
 	namesToISO := nameToISOMap()
 	date, err := parseDate(raw)
 	if err != nil {
@@ -111,6 +132,13 @@ func parse(raw []byte) ([]exchange.Rate, error) {
 
 	rates := []exchange.Rate{}
 	var rate *exchange.Rate
+
+	// The below code is janky and absolutely terrible. Parsing HTML with a
+	// state machine is bad and the only reason why it's done like this is
+	// because the output format keeps changing and it's at times easier to find
+	// which rates are related by the order they appear in the data, than where
+	// they are in the DOM.
+
 	parseCell := func(cell []byte) error {
 		// Three options: currency name, rate, or empty cell.
 
@@ -146,28 +174,84 @@ func parse(raw []byte) ([]exchange.Rate, error) {
 		return nil
 	}
 
-	state := "next_cell"
+	// This is a really straightforward state machine that reads the page in one
+	// pass. It's efficient and easy to tweak when the format inevitably
+	// changes. Parsing the HTML and finding the cells with something like
+	// xquery is in some sense more "correct", but also surprisingly brittle.
+	state := "find_tbody"
 StateLoop:
 	for {
 		switch state {
-		case "next_cell":
-			idx := bytes.Index(raw, []byte(needleStartCell))
+		case "find_tbody":
+			idx := bytes.Index(raw, []byte(`<tbody`))
 			if idx < 0 {
 				break StateLoop
 			}
-			state = "read_cell"
-			raw = raw[idx+len(needleStartCell):]
-		case "read_cell":
-			idx := bytes.Index(raw, []byte(needleEndCell))
+			state = "find_row"
+			raw = raw[idx+7:]
+		case "find_row":
+			idx := bytes.Index(raw, []byte(`<tr`))
+			if idx < 0 {
+				break StateLoop
+			}
+			state = "find_cell1"
+			raw = raw[idx+4:]
+		case "find_cell1":
+			idx := bytes.Index(raw, []byte(`<td`))
+			if idx < 0 {
+				break StateLoop
+			}
+			raw = raw[idx:]
+			idx = bytes.Index(raw, []byte(`>`))
+			raw = raw[idx+1:]
+			state = "read_cell1"
+		case "read_cell1":
+			idx := bytes.Index(raw, []byte(`</td>`))
+			if idx < 0 {
+				break StateLoop
+			}
+			state = "find_cell2"
+			raw = raw[idx+5:]
+		case "find_cell2":
+			idx := bytes.Index(raw, []byte(`<td`))
+			if idx < 0 {
+				break StateLoop
+			}
+			raw = raw[idx:]
+			idx = bytes.Index(raw, []byte(`>`))
+			raw = raw[idx+1:]
+			state = "read_cell2"
+		case "read_cell2":
+			idx := bytes.Index(raw, []byte(`</td>`))
 			if idx < 0 {
 				break StateLoop
 			}
 			cell := raw[:idx]
-			state = "next_cell"
 			if err := parseCell(cell); err != nil {
 				return nil, err
 			}
+			state = "find_cell3"
+			raw = raw[idx+5:]
+		case "find_cell3":
+			idx := bytes.Index(raw, []byte(`<td`))
+			if idx < 0 {
+				break StateLoop
+			}
 			raw = raw[idx:]
+			idx = bytes.Index(raw, []byte(`>`))
+			raw = raw[idx+1:]
+			state = "read_cell3"
+		case "read_cell3":
+			idx := bytes.Index(raw, []byte(`</td>`))
+			if idx < 0 {
+				break StateLoop
+			}
+			cell := raw[:idx]
+			if err := parseCell(cell); err != nil {
+				return nil, err
+			}
+			state = "find_row"
+			raw = raw[idx+5:]
 		}
 	}
 
